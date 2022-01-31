@@ -1,0 +1,85 @@
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="timer">
+        <p id=time>{{ timeMin }} : {{ timeSec }}</p>
+        <div id="button-flex">
+            <button class="buttons" v-on:click="ScountUp(10)">10秒</button>
+            <button class="buttons" v-on:click="McountUp(1)">1分</button>
+            <button class="buttons" v-on:click="McountUp(10)">10分</button>
+            <button class="buttons" v-on:click="McountUp(60)">60分</button>
+            <button class="buttons" v-on:click="start" v-if="!timerOn">Start</button>
+            <button class="buttons" v-on:click="stop" v-if="timerOn">Stop</button>
+            <button class="buttons" v-on:click="reset">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el:"#timer",
+            data:{
+                timeMin:'00',
+                timeSec:'00',
+                timerOn: false,
+                time:00,
+                timerObj: null,
+            },
+            methods: {
+                count: function() {
+                    if(this.timeSec <= 0 && this.timeMin >= 1) {
+                        this.timeMin = this.timeMin -1;
+                        this.timeSec = 59;
+                        this.timeSec = ('0' + this.timeSec).slice(-2);
+                        this.timeMin = ('0' + this.timeMin).slice(-2);
+                    } else if(this.timeSec <= 0 && this.timeMin <= 0) {
+                        this.complete();
+                        this.timerOn = false;
+                    } else {
+                        this.timeSec = this.timeSec -1;
+                        this.timeSec = ('0' + this.timeSec).slice(-2);
+                        this.timeMin = ('0' + this.timeMin).slice(-2);
+                    }
+                    // if(this.timesec - 10 < 0) {
+                    //     this.timesec = String(0 + this.timeSec)
+                    // }
+                },
+                McountUp:function(min){
+                    this.timeMin = Number(this.timeMin) + min
+                    this.timeSec = ('0' + this.timeSec).slice(-2);
+                    this.timeMin = ('0' + this.timeMin).slice(-2);
+                },
+                ScountUp:function(sec){
+                    this.timeSec = Number(this.timeSec) + sec
+                    this.timeSec = ('0' + this.timeSec).slice(-2);
+                    this.timeMin = ('0' + this.timeMin).slice(-2);
+                },
+                start: function() {
+                    let self = this;
+                    this.timerOn = true;
+                    this.timerObj = setInterval(function() {self.count()}, 1000)
+
+                },
+                stop: function() {
+                    clearInterval(this.timerObj);
+                    this.timerOn = false;
+                },
+                reset: function() {
+                    this.timeSec = 0
+                    this.timeMin = 0
+                    this.timeSec = ('0' + this.timeSec).slice(-2);
+                    this.timeMin = ('0' + this.timeMin).slice(-2);
+                },
+                complete: function() {
+                    clearInterval(this.timerObj);
+                    alert("タイマーが終了しました");
+                },
+
+            }
+        })
+    </script>
+
+</body>
+</html>
